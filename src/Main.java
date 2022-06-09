@@ -1,41 +1,64 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class Main {
 
     public static void main(String[] args)
     {
 
-        Towar[] towars = new Towar[6];
+        Towar[] towar = new Towar[6];
 
-        towars[0] = new Towar(12.9,"nic");
-        towars[1] = new Towar(29.0,"piłka");
-        towars[2] = new Towar(15.35,"samochodzik",2002,2,28);
-        towars[3] = new Towar(1.99,"chleb",2022,5,30);
-        towars[4] = new Towar(2.50,"woda", 2021,12,31);
-        towars[5] = new Towar(798.56,"telefon",2018,10,27);
+        towar[0] = new Towar();
+        towar[1] = new Towar(29.0, "pilka");
+        towar[2] = new Towar(15.35,"samochodzik",2002,2,28);
+        towar[3] = new Towar(1.99,"chleb",2022,5,30);
+        towar[4] = new Towar(2.50,"woda", 2021,12,31);
+        towar[5] = new Towar(798.56,"telefon",2018,10,27);
 
-        try{
-            PrintWriter writer = new PrintWriter("baza.txt");
+        try
+        {
+//            RandomAccessFile RAF = new RandomAccessFile("baza.txt", "rw");
+//            Towar.writeToFile(towar, RAF);
+//            RAF.seek(0);
+//            Towar[] towarki = Towar.readFromFile(RAF);
+//
+//            for(int i=0;i< towarki.length;i++)
+//            {
+//                System.out.println(towarki[i].getCena());
+//                System.out.println(towarki[i].getNazwa());
+//                System.out.println(towarki[i].getDataWydania());
+//                System.out.println("-------------------------------");
+//            }
+//
+//            try
+//            {
+//                Towar b = new Towar();
+//                b.czytajRekord(RAF,9);
+//                System.out.println(b);
+//            }
+//            catch (BrakRekordu e)
+//            {
+//                System.out.println(e.getMessage());
+//            }
+//
+//            RAF.close();
 
-            Towar.writeToFile(towars,writer);
+            ObjectOutputStream outS = new ObjectOutputStream(new FileOutputStream("baza.txt"));
+            outS.writeObject(towar);
 
-            writer.close();
+            outS.close();
 
+            ObjectInputStream inS = new ObjectInputStream(new FileInputStream("baza.txt"));
+            Towar[] a = (Towar[]) inS.readObject();
+            for (int i=0;i<a.length;i++)
+                System.out.println(a[i].getNazwa());
 
-            BufferedReader reader = new BufferedReader(new FileReader("baza.txt"));
-
-            Towar[] towars2 = Towar.readFromFile(reader);
-
-            for(int i=0;i< towars2.length;i++) System.out.println(towars2[i]);
-
-            reader.close();
-
-        }catch (IOException e)
+            inS.close();
+        }
+        catch (IOException e)
         {
             System.out.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
 
